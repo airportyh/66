@@ -15,7 +15,7 @@ Install `66` via NPM or Bower.
       // render the index page
     })
     
-    rt.get('/post/:id', function(params)
+    rt.get('/post/:id', function(params){
       // render post page
       // you can get at the id via `params.id`
     })
