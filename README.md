@@ -10,7 +10,7 @@ Install `66` via NPM or Bower.
 ## Usage
 
     var Router = require('66')
-    var rt = require('66')
+    var rt = new Router
     rt.get('/', function(){
       // render the index page
     })
