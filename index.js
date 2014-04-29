@@ -55,9 +55,7 @@ Router.prototype = {
     });
   },
   start: function(){
-    if (!supportsPushState){
-      this.goto(location.pathname)
-    }
+    this.goto(location.pathname);
   },
   _match: function(pattern, url){
     var varnames = pattern.match(/(:[a-zA-Z0-9]+)/g)
