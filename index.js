@@ -31,6 +31,29 @@ Router.prototype = {
       }
     }
   },
+  captureAnchorTagClicks: function(){
+    document.addEventListener('click', function(event) {
+      var element = e.target,
+        href, target, isAnchor, isRelative, isLocal;
+
+      if (element && element.nodeName == 'A') {
+        href = element.attributes.href && element.attributes.href.textContent;
+        target = element.attributes.target && element.attributes.target.textContent;
+        isAnchor = href.indexOf('#') === 0;
+        isRelative = href.indexOf('http') !== 0;
+        isLocal = href.indexOf(location.origin) === 0;
+
+        if (target !== '_blank' && (isRelative || isLocal) && !isAnchor) {
+          // don't change page, use push state, return false for browsers with no preventDefault
+          if (e.preventDefault) {
+            e.preventDefault();
+          }
+          history.pushState({}, '', href);
+          return false;
+        }
+      }
+    });
+  },
   start: function(){
     if (!supportsPushState){
       this.goto(location.pathname)
