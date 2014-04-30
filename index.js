@@ -37,32 +37,37 @@ Router.prototype = {
         }
     },
 
-    captureAnchorTagClicks: function() {
-        document.addEventListener('click', function(event) {
-            var element = e.target,
-                href, target, isAnchor, isRelative, isLocal;
-
-            if (element && element.nodeName == 'A') {
-                href = element.attributes.href && element.attributes.href.textContent;
-                target = element.attributes.target && element.attributes.target.textContent;
-                isAnchor = href.indexOf('#') === 0;
-                isRelative = href.indexOf('http') !== 0;
-                isLocal = href.indexOf(location.origin) === 0;
-
-                if (target !== '_blank' && (isRelative || isLocal) && !isAnchor) {
-                    // don't change page, use push state, return false for browsers with no preventDefault
-                    if (e.preventDefault) {
-                        e.preventDefault();
-                    }
-                    history.pushState({}, '', href);
-                    return false;
-                }
-            }
-        });
-    },
-
     start: function() {
         this.goto(location.pathname);
+    },
+
+    captureAnchorTagClicks: function(element) {
+        if (!element) {
+            element = document;
+        }
+
+        element.addEventListener('click', this.handleClicks);
+    },
+
+    handleClicks: function(e) {
+        var element = e.target,
+            href, target, isAnchor, isRelative, isLocal;
+
+        if (element && element.nodeName == 'A') {
+            href = element.attributes.href && element.attributes.href.textContent;
+            target = element.attributes.target && element.attributes.target.textContent;
+            isAnchor = href.indexOf('#') === 0;
+            isRelative = href.indexOf('http') !== 0;
+            isLocal = href.indexOf(location.origin) === 0;
+            if (target !== '_blank' && (isRelative || isLocal) && !isAnchor) {
+                // don't change page, use push state, return false for browsers with no preventDefault
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                history.pushState({}, '', href);
+                return false;
+            }
+        }
     },
 
     _match: function(pattern, url) {
@@ -87,4 +92,12 @@ Router.prototype = {
     }
 }
 
-module.exports = Router
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Router;
+} else if (typeof define === 'function') {
+    define(function() {
+        return Router;
+    });
+} else {
+    window['66'] = Router;
+}
