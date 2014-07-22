@@ -46,7 +46,7 @@ Router.prototype = {
             element = document;
         }
 
-        element.addEventListener('click', this.handleClicks);
+        element.addEventListener('click', this.handleClicks.bind(this));
     },
 
     handleClicks: function(e) {
@@ -64,7 +64,9 @@ Router.prototype = {
                 if (e.preventDefault) {
                     e.preventDefault();
                 }
-                history.pushState({}, '', href);
+
+                this.goto(href);
+
                 return false;
             }
         }
